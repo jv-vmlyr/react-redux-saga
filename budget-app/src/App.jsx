@@ -1,45 +1,72 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useState } from 'react';
+import { Container } from 'semantic-ui-react';
+import './App.css';
+import MainHeader from './components/MainHeader';
+import DisplayBalance from './components/DisplayBalance';
+import EntryForm from './components/EntryForm';
+import SectionHeader from './components/SectionHeader';
+import IncomeAndExpense from './components/IncomeAndExpense';
+import EntryLines from './components/EntryLines';
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [entries, setEntries] = useState(initialEntries);
+
+  function deleteEntry(id) {
+    const result = entries.filter((entry) => entry.id !== id);
+    console.log('entries', entries);
+    console.log('result', result);
+    setEntries(result);
+  }
+
+  function addEntry(description, value) {
+    const result = entries.concat({
+      id: entries.length + 1,
+      description,
+      value,
+    });
+    console.log('result', result);
+    console.log('entries', entries);
+    setEntries(result);
+  }
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+    <Container>
+      <MainHeader title="Budget" />
+      <DisplayBalance title="Your Balance:" value="2,550.53" size="small" />
+      <IncomeAndExpense />
+      <SectionHeader title="History" />
+      <EntryLines entries={entries} deleteEntry={deleteEntry} />
+      <SectionHeader title="Add new transaction" />
+      <EntryForm addEntry={addEntry} />
+    </Container>
+  );
 }
 
-export default App
+export default App;
+
+var initialEntries = [
+  {
+    id: 1,
+    description: 'Work Income',
+    value: '$4300.00',
+    isExpense: false,
+  },
+  {
+    id: 2,
+    description: 'Electric Bill',
+    value: '$130.00',
+    isExpense: true,
+  },
+  {
+    id: 3,
+    description: 'Rent',
+    value: '$1365.00',
+    isExpense: true,
+  },
+  {
+    id: 4,
+    description: 'Phone Bill',
+    value: '$123.00',
+    isExpense: true,
+  },
+];
